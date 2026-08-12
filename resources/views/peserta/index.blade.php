@@ -23,8 +23,12 @@
             <td class="text-center">{{ $v->age }}</td>
             <td class="text-center">{{ $v->address }}</td>
             <td class="text-center">
-                <a href="" class="btn btn-success">Edit</a>
-                <a href="" class="btn btn-danger">Delete</a>
+                <a href="{{ route('edit-peserta', $v->id) }}" class="btn btn-success">Edit</a>
+                <form action="{{ route('delete-peserta', $v->id) }}" method="post" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Delete</button>
+                </form>
             </td>
         </tr>
         @endforeach
