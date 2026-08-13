@@ -1,13 +1,18 @@
 <?php
 
 use App\Http\Controllers\BelajarController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LoginController::class, 'login']);
+Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::post('actionLogin', [LoginController::class, 'actionLogin'])->name('actionLogin');
 //Method : GET, POST, PUT, DELETE, PATCH
 //GET : Lihat dan Baca
 //POST : Mengirim Data dari Form, Aksinya adalah Insert
@@ -33,5 +38,13 @@ Route::get('edit-peserta/{id}', [PesertaController::class, 'edit'])->name('edit-
 Route::put('update-peserta/{id}', [PesertaController::class, 'update'])->name('update-peserta');
 Route::delete('delete-peserta/{id}', [PesertaController::class, 'delete'])->name('delete-peserta');
 
+//middleware: email dan password
+Route::middleware('auth')->group(function(){
+    Route::resource('dashboard', DashboardController::class);
+    Route::resource('role', RoleController::class);
+    Route::resource('category', CategoryController::class);
+    Route::resource('product', ProductController::class);
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+});
+
 //Role
-Route::resource('role', RoleController::class);

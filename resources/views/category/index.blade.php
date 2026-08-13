@@ -2,7 +2,7 @@
 @section('content')
 <div class="table table-responsive">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('role.create') }}" class="btn btn-primary mb-3">Create</a>
+        <a href="{{ route('category.create') }}" class="btn btn-primary mb-3">Create</a>
     </div>
     <table class="table table-bordered">
         <thead>
@@ -14,14 +14,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ( $roles as $index => $v )
+            @foreach ( $categories as $index => $v )
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td class="text-center">{{ $v->name }}</td>
                 <td class="text-center {{ $v->is_active == 1 ? 'text-success' : 'text-danger' }}">{{ $v->is_active == 1 ? 'Active' : 'Non-Active' }}</td>
                 <td class="text-center">
-                    <a href="{{ route('role.edit', $v->id) }}" class="btn btn-success">Edit</a>
-                    <form action="{{ route('role.destroy', $v->id) }}" method="post" class="d-inline">
+                    <a href="{{ route('category.edit', $v->id) }}" class="btn btn-success">Edit</a>
+                    <form action="{{ route('category.destroy', $v->id) }}" method="post" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Delete</button>
