@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\BelajarController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PesertaController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,7 @@ Route::middleware('auth')->group(function(){
     Route::resource('role', RoleController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('product', ProductController::class);
+    Route::resource('setting', SettingController::class);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
 

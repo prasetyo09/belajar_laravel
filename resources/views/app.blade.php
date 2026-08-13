@@ -167,14 +167,14 @@
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="sidebar-brand">AdminPanel</div>
+        <div class="sidebar-brand text-center">{{ $settings->hero }}</div>
         <ul class="sidebar-menu">
             <li><a href="{{ url('dashboard') }}" class="active">Dashboard</a></li>
             <li><a href="{{ url('role') }}">Role</a></li>
             <li><a href="{{ url('category') }}">Category</a></li>
             <li><a href="{{ url('product') }}">Product</a></li>
             <li><a href="#">Pesanan</a></li>
-            <li><a href="#">Pengaturan</a></li>
+            <li><a href="{{ url('setting') }}">Settings</a></li>
         </ul>
     </aside>
     <!-- Main Area -->
@@ -182,7 +182,7 @@
 
         <!-- Navbar -->
         <header class="navbar">
-            <div><strong>Dashboard Overview</strong></div>
+            <div><strong>{{ $settings->title }}</strong></div>
             <div class="user-profile">
                 <span>{{ auth()->user()->name }}</span>
                 <div class="avatar">A</div>
