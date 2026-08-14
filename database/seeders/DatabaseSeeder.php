@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             PesertaSeeder::class,
             RoleSeeder::class,
             CategorySeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            SettingSeeder::class
         ]);
 
         // User::factory(10)->create();

@@ -4,13 +4,14 @@
     <div class="d-flex justify-content-end">
         <a href="{{ route('product.create') }}" class="btn btn-primary mb-3">Create</a>
     </div>
-    <table class="table table-bordered">
+    <table class="table table-hover table-bordered">
         <thead>
             <tr>
                 <th class="text-center">No</th>
                 <th class="text-center">Category Name</th>
                 <th class="text-center">Name</th>
                 <th class="text-center">Price</th>
+                <th class="text-center">Photo</th>
                 <th class="text-center">Description</th>
                 <th class="text-center">Actions</th>
             </tr>
@@ -22,6 +23,9 @@
                 <td class="text-center">{{ $v->category->name }}</td>
                 <td class="text-center">{{ $v->name }}</td>
                 <td class="text-center">{{ $v->price }}</td>
+                <td class="text-center">
+                    <img src="{{ Storage::url($v->photo) }}" alt="Gambar">
+                </td>
                 <td class="text-center">{{ $v->description }}</td>
                 <td class="text-center">
                     <a href="{{ route('product.edit', $v->id) }}" class="btn btn-success">Edit</a>

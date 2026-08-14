@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-end">
         <a href="{{ route('role.create') }}" class="btn btn-primary mb-3">Create</a>
     </div>
-    <table class="table table-bordered">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th class="text-center">No</th>

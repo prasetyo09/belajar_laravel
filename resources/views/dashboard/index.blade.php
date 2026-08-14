@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <h3>Tes Dashboard</h3>
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
