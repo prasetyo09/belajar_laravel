@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-end">
         <a href="{{ route('category.create') }}" class="btn btn-primary mb-3">Create</a>
     </div>
-    <table class="table table-hover table-bordered border-dark">
+    <table class="table table-hover table-bordered border-dark" id="myTable">
         <thead>
             <tr>
                 <th class="text-center">No</th>

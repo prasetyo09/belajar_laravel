@@ -7,6 +7,7 @@
     <title>{{ $title ?? '' }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/v/dt/dt-3.0.1/datatables.min.css" rel="stylesheet">
     <style>
         /* Reset & Base Style */
         * {
@@ -173,7 +174,7 @@
             <li><a href="{{ url('role') }}">Role</a></li>
             <li><a href="{{ url('category') }}">Category</a></li>
             <li><a href="{{ url('product') }}">Product</a></li>
-            <li><a href="#">Pesanan</a></li>
+            <li><a href="{{ url('transaction') }}">Order Transaction</a></li>
             <li><a href="{{ url('setting') }}">Settings</a></li>
         </ul>
     </aside>
@@ -199,6 +200,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.datatables.net/v/dt/dt-3.0.1/datatables.min.js" ></script>
+    <script>
+        const table = new DataTable('#myTable', {
+        // Configuration options
+        });
     </script>
 </body>
 
