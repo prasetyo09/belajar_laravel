@@ -24,7 +24,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::get();
-        $title = "Create New Product";
+        $title = "Add New Product";
         return view('product.create', compact('title', 'categories'));
     }
 
@@ -53,7 +53,10 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $categories = Category::get();
+        $products = Product::find($id);
+        $title = "Detail Product";
+        return view('product.detail', compact('title', 'products', 'categories'));
     }
 
     /**
@@ -97,8 +100,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        Storage::disk('public')->delete($product->photo);
+        if ($product->photo) {
+            Storage::disk('public')->delete($product->photo);
+        }
         $product->delete();
+
         return redirect()->to('product');
     }
 }

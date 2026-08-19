@@ -25,7 +25,7 @@ class TransactionController extends Controller
     public function create()
     {
         $categories = Category::get();
-        $products = Product::orderBy('id')->get();
+        $products = Product::with('category')->orderBy('id')->get();
         $title = "Create New Order";
         return view('transaction.create', compact('title', 'categories', 'products'));
     }

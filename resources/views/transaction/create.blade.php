@@ -15,6 +15,10 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        .product-item{
+            cursor: pointer;
+        }
+
         .product-card{
             border: none;
             border-radius: 15px;
@@ -35,7 +39,7 @@
         }
 
         .price{
-            color: #6f4e37;
+            color: greenyellow;
             font-weight: bold;
         }
 
@@ -84,19 +88,20 @@
                     <p class="text-muted">Central Jakarta PPKD Coffee Shop</p>
                     <button class="btn btn-dark">Empty Cart</button>
                 </div>
-
-                    <a href="{{ url('transaction') }}" class="btn btn-primary">Back</a>
+                <div class="mb-3">
+                    <a href="{{ url('transaction') }}" class="btn btn-primary"><i class="bi bi-arrow-left"></i>Back to CMS</a>
+                </div>
 
                 <div class="row g-5 mb-2">
                     <div class="col-md-4">
                         <div class="card shadow-sm p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
-                                </div>
-                                <div>
-                                    <small class="text-muted">Today Transaction</small>
-                                    <h4>10.000.000</h4>
+                                    <div>
+                                        <small class="text-muted">Today Transaction</small>
+                                        <h4>10.000.000</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,12 +109,12 @@
                     <div class="col-md-4">
                         <div class="card shadow-sm p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
-                                </div>
-                                <div>
-                                    <small class="text-muted">Product Sold</small>
-                                    <h4>10.000.000</h4>
+                                    <div>
+                                        <small class="text-muted">Product Sold</small>
+                                        <h4>10.000.000</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -117,12 +122,12 @@
                     <div class="col-md-4">
                         <div class="card shadow-sm p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
-                                </div>
-                                <div>
-                                    <small class="text-muted">Today Transaction</small>
-                                    <h4>10.000.000</h4>
+                                    <div>
+                                        <small class="text-muted">Today Transaction</small>
+                                        <h4>10.000.000</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,11 +147,11 @@
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <button class="btn btn-dark btn-sm me-1 category-btn">
+                                    <button class="btn btn-dark btn-sm me-1 category-btn" onclick="filterCategory('all', this)" data-category="all">
                                         All
                                     </button>
                                     @foreach ($categories as $category )
-                                    <button class="btn btn-dark btn-sm me-1 category-btn">
+                                    <button class="btn btn-outline-dark btn-sm me-1 category-btn" onclick="filterCategory('{{ $category->id }}', this)" data-category="{{ $category->id }}">
                                         {{ $category->name ?? '' }}
                                     </button>
                                     @endforeach
@@ -154,14 +159,20 @@
 
                                 <div class="row g-3" id="productList">
                                     @foreach ($products as $product )
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-4 col-sm-6 product-item"
+                                    data-category="{{ $product->category->id }}"
+                                        data-id="{{ $product->id }}"
+                                        data-name="{{ $product->name }}"
+                                        data-price="{{ $product->price }}"
+
+                                        onclick="addToCart({{ $product->id }})">
                                         <div class="card product-card shadow h-100 rounded-4 border-black">
                                             <div class="product-image d-flex justify-content-center">
                                                 <img src="{{ asset('storage/' . $product->photo) }}" style="object-fit: cover">
                                             </div>
                                             <div class="card-body bg-black bg-opacity-25 card-text">
                                                 <span class="badge bg-light text-dark mb-2">{{ $product->category->name }}</span>
-                                                <h6 class="fw-bold text-gray">{{ $product->name ?? '' }}</h6>
+                                                <h6 class="fw-bold text-white">{{ $product->name ?? '' }}</h6>
                                                 <span class="price">{{ number_format($product->price) }}</span>
                                             </div>
                                         </div>
@@ -175,8 +186,9 @@
                         <div class="card border-0 shadow p-3 cart-box mb-3">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-3">
-                                    <h5 class="fw-bold mb-0">
-                                        <i class="bi bi-cart"></i>Cart
+                                    <h5 class="fw-bold mb-0 d-flex flex-row gap-1">
+                                        <i class="bi bi-cart"></i>
+                                        Cart
                                     </h5>
                                     <span class="badge bg-dark" id="cartCount">
                                         0
@@ -186,7 +198,7 @@
                                     <div class="text-center text-muted py-5">
                                         <div class="fs-2">
                                             <i class="bi bi-cart4"></i>
-                                            <p>Keranjang Masih Kosong</p>
+                                            <p>Empty Card</p>
                                         </div>
                                     </div>
                                 </div>
@@ -196,7 +208,7 @@
                                 <strong id="subTotal">Rp. 0</strong>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Pajak (10%)</span>
+                                <span>Tax (10%)</span>
                                 <strong id="tax">Rp. 0</strong>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
@@ -210,6 +222,70 @@
             </main>
         </div>
     </div>
+
+    <script>
+        const products = $products->map(function($product){
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'category_id' => $product->category_id,
+                'category_name' => $product->category_name,
+                'price' => $product->price
+            ]
+        });
+
+        console.log($products);
+        function filterCategory(categoryId, button){
+            //selector all = array
+            const products = document.querySelectorAll('.product-item');
+            products.forEach(function(product){
+                const categoryName = product.dataset.category;
+
+                //jika user click category all, muncul category all
+                //jika user click category snack, muncul category snack
+
+                if (categoryId === 'all' || categoryName === String(categoryId) ) {
+                    product.style.display = "";
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+            document.querySelectorAll('.category-btn').forEach(function(btn){
+                btn.classList.remove('btn-dark', 'active');
+                btn.classList.add('btn-outline-dark');
+            });
+
+            //ketika user memilih kategori
+            button.classList.remove('btn-outline-dark');
+            button.classList.add('btn-outline-dark', 'active');
+        }
+
+        function addToCart(productId){
+            let cart = [];
+            const products = document.querySelector(`.product-item`);
+
+            const productCard = products.closest('.product-item');
+            const productName = productCard.dataset.name;
+            const productPrice = productCard.dataset.price;
+
+            const existingItem = cart.find(function(item){
+                return Number(item.id) === Number(productId);
+            });
+
+            if (existingItem) {
+                existingItem.qty++;
+            } else{
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    qty: 1
+                })
+            }
+
+            console.log(cart);
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">

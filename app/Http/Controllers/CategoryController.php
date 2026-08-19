@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $title = 'Create New Category';
+        $title = 'Add New Category';
         return view('category.create', compact('title'));
     }
 

@@ -2,9 +2,9 @@
 @section('content')
 <div class="table table-responsive">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('category.create') }}" class="btn btn-primary mb-3">Create</a>
+        <a href="{{ route('category.create') }}" class="btn btn-primary mb-3">Add Category</a>
     </div>
-    <table class="table table-hover table-bordered border-dark" id="myTable">
+    <table class="table table-hover table-bordered" id="myTable">
         <thead>
             <tr>
                 <th class="text-center">No</th>
