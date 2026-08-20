@@ -35,7 +35,7 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column align-items-center">
                                 <h3 class="fw-bold form-label">Product Photo</h3>
-                                <img src="{{ asset('storage/' . $products->photo) }}" alt="Product Picture" class="shadow rounded-5 border border-dark">
+                                <img src="{{ asset('storage/' . $products->photo) }}" alt="Product Picture" class="shadow rounded-5 border border-dark" width="450" height="450">
                             </div>
                         </div>
                     </div>

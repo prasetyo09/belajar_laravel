@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Central Jakarta PPKD Coffee Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -67,7 +68,7 @@
         .total-price{
             font-size: 25px;
             font-weight: bold;
-            color:#6f4e37;
+            color:green;
         }
 
         .payment-btn{
@@ -94,9 +95,9 @@
 
                 <div class="row g-5 mb-2">
                     <div class="col-md-4">
-                        <div class="card shadow-sm p-3 gap-3">
+                        <div class="card shadow p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 ">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
                                     <div>
                                         <small class="text-muted">Today Transaction</small>
@@ -107,9 +108,9 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card shadow-sm p-3 gap-3">
+                        <div class="card shadow p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 ">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
                                     <div>
                                         <small class="text-muted">Product Sold</small>
@@ -120,9 +121,9 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card shadow-sm p-3 gap-3">
+                        <div class="card shadow p-3 gap-3">
                             <div class="card-body">
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 ">
                                     <i class="bi bi-cart4" style="font-size: 2rem"></i>
                                     <div>
                                         <small class="text-muted">Today Transaction</small>
@@ -143,7 +144,7 @@
                                         <h5 class="fw-bold">Select Product</h5>
                                     </div>
                                     <div class="col-md-5">
-                                        <input type="text" id="searchProduct" class="form-control" placeholder="Search Product...">
+                                        <input type="text" id="searchProduct" class="form-control" placeholder="Search Product..." onkeyup="searchProduct()">
                                     </div>
                                 </div>
                                 <div class="mb-4">
@@ -160,7 +161,8 @@
                                 <div class="row g-3" id="productList">
                                     @foreach ($products as $product )
                                     <div class="col-md-4 col-sm-6 product-item"
-                                    data-category="{{ $product->category->id }}"
+
+                                        data-category="{{ $product->category->id }}"
                                         data-id="{{ $product->id }}"
                                         data-name="{{ $product->name }}"
                                         data-price="{{ $product->price }}"
@@ -198,7 +200,7 @@
                                     <div class="text-center text-muted py-5">
                                         <div class="fs-2">
                                             <i class="bi bi-cart4"></i>
-                                            <p>Empty Card</p>
+                                            <p>Empty Cart</p>
                                         </div>
                                     </div>
                                 </div>
@@ -215,7 +217,7 @@
                                 <span class="fw-bold">Total</span>
                                 <span class="total-price" id="total">Rp. 0</span>
                             </div>
-                            <button class="btn btn-success w-100 py-3 payment-btn">Payment</button>
+                            <button type="submit" class="btn btn-success w-100 py-3 payment-btn" onclick="processPayment()">Payment</button>
                         </div>
                     </div>
                 </div>
@@ -224,17 +226,6 @@
     </div>
 
     <script>
-        const products = $products->map(function($product){
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'category_id' => $product->category_id,
-                'category_name' => $product->category_name,
-                'price' => $product->price
-            ]
-        });
-
-        console.log($products);
         function filterCategory(categoryId, button){
             //selector all = array
             const products = document.querySelectorAll('.product-item');
@@ -260,13 +251,18 @@
             button.classList.add('btn-outline-dark', 'active');
         }
 
-        function addToCart(productId){
-            let cart = [];
-            const products = document.querySelector(`.product-item`);
+        let cart = [];
 
-            const productCard = products.closest('.product-item');
-            const productName = productCard.dataset.name;
-            const productPrice = productCard.dataset.price;
+        function addToCart(productId){
+            const product = document.querySelector(`.product-item[data-id="${productId}"]`);
+
+            if (!product) {
+                alert('Product not found!');
+                return;
+            }
+
+            const productName = product.dataset.name;
+            const productPrice = Number(product.dataset.price);
 
             const existingItem = cart.find(function(item){
                 return Number(item.id) === Number(productId);
@@ -283,7 +279,160 @@
                 })
             }
 
-            console.log(cart);
+            displayCart();
+        }
+
+        function displayCart(){
+            const cartItems = document.getElementById('cartItems');
+
+            cartItems.innerHTML = "";
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-muted py-5">
+                        <div class="fs-2">
+                            <i class="bi bi-cart4"></i>
+                            <p>Empty Card</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cart.forEach(function(item){
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>
+                                    ${item.name}
+                                </strong>
+                                <div class="small text-muted">${formatRupiah(item.price)}</div>
+                            </div>
+                            <strong>
+                                ${formatRupiah(item.price * item.qty)}
+                            </strong>
+                        </div>
+                        <div class="d-flex align-items-center mt-3 gap-1">
+                            <button type="button" class="btn btn-outline-secondary quantity-btn" onclick="decreaseItem(${item.id})">
+                                -
+                            </button>
+                            <span>${item.qty}</span>
+                            <button type="button" class="btn btn-outline-secondary quantity-btn" onclick="increaseItem(${item.id})">
+                                +
+                            </button>
+
+                            <button type="button" class="btn btn-outline-danger ms-auto" onclick="removeItem(${item.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            calculateCart();
+        }
+
+        function removeItem(productId){
+            cart = cart.filter(function(item){
+                return Number(item.id) !== Number(productId);
+            });
+
+            displayCart();
+        }
+
+        function decreaseItem(productId){
+            const item = cart.find(function(item){
+                return Number(item.id) === Number(productId);
+            });
+
+            item.qty--;
+
+            if (item.qty <= 0) {
+                removeItem(productId);
+                return;
+                exit();
+            }
+            displayCart();
+        }
+
+        function increaseItem(productId){
+            const item = cart.find(function(item){
+                return Number(item.id) === Number(productId);
+            });
+
+            item.qty++;
+
+            displayCart();
+        }
+
+        function calculateCart(){
+            let subTotal = 0;
+            let itemCount = 0;
+
+            cart.forEach(function(item){
+                subTotal += Number(item.price) * Number(item.qty);
+                itemCount += Number(item.qty);
+            });
+
+            const tax = subTotal * 0.10;
+            const total = subTotal + tax;
+
+            document.getElementById('subTotal').innerText = `Rp${formatRupiah(subTotal)}`
+            document.getElementById('tax').innerText = `Rp${formatRupiah(tax)}`
+            document.getElementById('total').innerText = `Rp${formatRupiah(total)}`
+            document.getElementById('cartCount').innerText = itemCount;
+        }
+
+        function formatRupiah(number){
+            return new Intl.NumberFormat('id-ID').format(number)
+        }
+
+        function searchProduct(){
+            const search = document.getElementById('searchProduct').value.toLowerCase().trim();
+            const products = document.querySelectorAll('.product-item');
+
+            products.forEach(function(product){
+                const productName = product.dataset.name.toLowerCase();
+
+                //jika product name di dalam tabel nilainya sama pada saat user input
+                if (productName.includes(search)) {
+                    product.style.display = "";
+                } else {
+                    product.style.display = "none";
+                }
+            })
+        }
+
+        async function processPayment(){
+            if (cart.length === 0) {
+                alert('Cart is Empty')
+                return;
+            }
+
+            try {
+                const response = await fetch("{{ route('transaction.store') }}", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN':document.querySelector(`meta[name="csrf-token"]`).getAttribute('content')
+                    },
+
+                    body: JSON.stringify({
+                        items: cart.map(function(item){
+                            return{
+                                id: item.id,
+                                qty: item.qty
+                            }
+                        }),
+                        payment_method: "cash"
+                    })
+                })
+                const result = await response.json();
+                cart = [];
+                displayCart();
+                location.reload();
+            } catch (error) {
+                console.log(error)
+            }
         }
     </script>
 
