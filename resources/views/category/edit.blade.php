@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex justify-content-end">
-                <a href="{{ url('category') }}" class="btn btn-primary mb-3"><-Back</a>
+                <a href="{{ url('category') }}" class="btn btn-primary mb-3"><i class="bi bi-arrow-left"></i>Back</a>
             </div>
             <div class="card">
                 <div class="card-body">

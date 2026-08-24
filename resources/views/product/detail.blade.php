@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex justify-content-end">
-                <a href="{{ url('product') }}" class="btn btn-primary mb-3"><-Back</a>
+                <a href="{{ url('product') }}" class="btn btn-primary mb-3"><i class="bi bi-arrow-left"></i>Back</a>
             </div>
             <div class="card">
                 <div class="card-body">
@@ -35,7 +35,7 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column align-items-center">
                                 <h3 class="fw-bold form-label">Product Photo</h3>
-                                <img src="{{ asset('storage/' . $products->photo) }}" alt="Product Picture" class="shadow rounded-5 border border-dark" width="450" height="450">
+                                <img src="{{ Storage::url($products->photo) }}" alt="Product Picture" class="shadow rounded-5 border border-dark" width="450" height="450">
                             </div>
                         </div>
                     </div>

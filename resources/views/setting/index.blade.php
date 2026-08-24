@@ -17,6 +17,14 @@
                             <label for="" class="form-label fw-bold">Title</label>
                             <input type="text" name="title" id="title" class="form-control" value="{{ $settings->title ?? '' }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label fw-bold">POS Title</label>
+                            <input type="text" name="pos_title" id="pos_title" class="form-control" value="{{ $settings->pos_title ?? '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label fw-bold">Business Name</label>
+                            <input type="text" name="business_name" id="business_name" class="form-control" value="{{ $settings->business_name ?? '' }}">
+                        </div>
                         <button type="submit" name="save" class="btn btn-primary">Save</button>
                         <button type="reset" class="btn btn-outline-primary">Reset</button>
                     </form>

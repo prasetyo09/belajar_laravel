@@ -1,11 +1,10 @@
 @extends('app')
 @section('content')
-
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex justify-content-end">
-                <a href="{{ url('role') }}" class="btn btn-primary mb-3"><-Back</a>
+                <a href="{{ url('role') }}" class="btn btn-primary mb-3"><i class="bi bi-arrow-left"></i>Back</a>
             </div>
             <div class="card">
                 <div class="card-body">
@@ -37,5 +36,4 @@
         </div>
     </div>
 </div>
-
 @endsection

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="d-flex justify-content-end">
-                    <a href="{{ url('product') }}" class="btn btn-primary mb-3"><-Back</a>
+                    <a href="{{ url('product') }}" class="btn btn-primary mb-3"><i class="bi bi-arrow-left"></i>Back</a>
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -32,7 +32,7 @@
                                     value="{{ $products->price }}">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label fw-bold">Photo</label>
+                                <label for="" class="form-label fw-bold">Photo (1:1)</label>
                                 <input type="file" name="photo" id="photo" class="form-control">
                             </div>
                             <div class="mb-3">

@@ -30,7 +30,7 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**
@@ -57,7 +57,9 @@ class SettingController extends Controller
         $setting = Setting::find($id);
         $setting->update([
             'hero' => $request->hero,
-            'title' => $request->title
+            'title' => $request->title,
+            'pos_title' => $request->pos_title,
+            'business_name' => $request->business_name
         ]);
 
         return redirect()->to('setting');

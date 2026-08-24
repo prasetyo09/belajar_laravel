@@ -84,9 +84,9 @@
     <div class="container-fluid">
         <div class="card">
             <main class="col-lg-12 p-5">
-                <h3 class="fw-bold mb-1">Point of Sales</h3>
+                <h3 class="fw-bold mb-1">{{ $settings->pos_title }}</h3>
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <p class="text-muted">Central Jakarta PPKD Coffee Shop</p>
+                    <p class="text-muted">{{ $settings->business_name }}</p>
                     <button class="btn btn-dark">Empty Cart</button>
                 </div>
                 <div class="mb-3">
