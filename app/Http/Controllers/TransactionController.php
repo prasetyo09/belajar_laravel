@@ -35,7 +35,40 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'items' => 'required||array',
+            'items.*.id' => 'required|exists.products,id',
+            'items.*.qty' => 'required|integer|min:1',
+            'payment_method' => 'nullable|string',
+        ]);
+
+        try{
+            return DB::transaction(function () use ($request){
+                $subTotal = 0;
+                $itemsData = [];
+
+                foreach ($request as $items => $item) {
+                    $product = Product::find($item['id']);
+
+                    $itemSubTotal = $product->price * $item['qty'];
+                    $subTotal += $itemSubTotal;
+
+                    $itemData[] = [
+                        'product' => $product,
+                        'qty' => $item['qty'],
+                        'price' => $product->price,
+                        'subtotal' => $itemSubTotal
+                    ];
+                }
+
+                $tax = $subtotal * 0.1;
+                $total = $subtotal + $tax;
+                $order_code = 'ORD-'.date('Void') . '-' . rand(1000, 9999);
+                $paymentMethod = $request->payment_method ?? 'cash';
+            });
+        } catch (\Throwable $th) {
+
+        }
     }
 
     /**

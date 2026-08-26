@@ -176,6 +176,10 @@
             </li>
 
             <li>
+                <a href="{{ url('menu') }}" class="d-flex gap-2 {{ request()->is('menu') ? 'active' : '' }}"><i class="bi bi-bag"></i>Menu</a>
+            </li>
+
+            <li>
                 <a href="{{ url('role') }}" class="d-flex gap-2 {{ request()->is('role') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Role</a>
             </li>
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\BelajarController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -43,6 +44,8 @@ Route::delete('delete-peserta/{id}', [PesertaController::class, 'delete'])->name
 //middleware: email dan password
 Route::middleware('auth')->group(function(){
     Route::resource('dashboard', DashboardController::class);
+    Route::resource('menu', MenuController::class);
+    Route::get('menu/sidebar', [MenuController::class, 'sidebar']);
     Route::resource('role', RoleController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('product', ProductController::class);
