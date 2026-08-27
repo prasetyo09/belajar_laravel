@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Midtrans\Snap;
+use Midtrans\Config;
 
 class TransactionController extends Controller
 {
@@ -91,6 +93,34 @@ class TransactionController extends Controller
                     if ($paymentMethod === 'cash') {
                         $data['product']->decrement('qty', $data['qty']);
                     }
+                }
+
+                if ($paymentMethod === 'midtrans') {
+                    Config::$serverKey    = config('services.midtrans.server_key');
+                    Config::$isProduction = config('services.midtrans.is_production');
+                    Config::$isSanitized  = true;
+                    Config::$is3ds        = true;
+
+                    $params = [
+                        "transaction_details" => [
+                            "order_id" => $order->order_code,
+                            "gross_amount" => (int) round($total)
+                        ],
+                        "customer_details" => [
+                            "first_name" => $$request->customen_name ?? 'No-Name'
+                        ],
+                        // 'enabled_payments' => ['gopay', 'qris']
+                    ];
+
+                    $snapToken = Snap::getSnapToken($params);
+
+                    return response()->json([
+                        'success' => true,
+                        'payment_method' => 'midtrans',
+                        'snap_token' => $snapToken,
+                        'order_id' => $order->id
+                    ]);
+
                 }
                 return response()->json([
                     'success' => true,

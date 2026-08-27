@@ -252,8 +252,8 @@
                     <h5 class="mb-3 fw-semibold">Pilih Metode Pembayaran</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="" class="w-100 card-payment">
-                                <input type="radio" name="payment_method" value="cash" class="d-none payment-option" checked>
+                            <label class="w-100 card-payment">
+                                <input type="radio" name="payment_method" value="cash" class="d-none payment-option">
                                 <div class="card p-3 shadow-sm border payment-card text-center h-100">
                                     <h4 class="text-success fw-bold"><i class="bi bi-cash-stack"></i> Cash</h4>
                                     <p class="text-muted small">Bayar Langsung di Kasir Secara Tunai.</p>
@@ -261,8 +261,8 @@
                             </label>
                         </div>
                         <div class="col-md-6 ">
-                            <label for="" class="w-100 card-payment">
-                                <input type="radio" name="payment_method" value="midtrans" class="d-none payment-option" checked>
+                            <label class="w-100 card-payment">
+                                <input type="radio" name="payment_method" value="midtrans" class="d-none payment-option">
                                 <div class="card p-3 shadow-sm border payment-card text-center h-100">
                                     <h4 class="text-success fw-bold"><i class="bi bi-cash-stack"></i> Online</h4>
                                     <p class="text-muted small">Pembayaran Online via QRIS / E-Wallet</p>
@@ -480,8 +480,9 @@
                 return;
             }
 
-            const customerNameInput = document.getElementById('customer_name').value || 'Unknown';
-            const selectMethod = document.querySelector('input[name=payment_method]:checked').value || 'cash';
+            const selectedPayment = document.querySelector('input[name=payment_method]:checked');
+            const paymentMethod = selectedPayment ? selectedPayment.value : 'cash';
+            const customerName = document.getElementById('customer_name').value || 'Unknown';
 
             try {
                 const response = await fetch("{{ route('transaction.store') }}", {
@@ -499,8 +500,8 @@
                                 qty: item.qty
                             }
                         }),
-                        payment_method: selectMethod,
-                        customer_name: customerNameInput
+                        payment_method: paymentMethod,
+                        customer_name: customerName
                     })
                 })
 
@@ -525,7 +526,7 @@
                         onPending: function (result) {
                             /* You may add your own implementation here */
 
-                            alert("wating your payment!");
+                            alert("waiting your payment!");
                             location.reload();
                             // console.log(result);
                         },
