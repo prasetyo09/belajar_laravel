@@ -37,7 +37,8 @@ class ProductController extends Controller
             'name' => $request->name,
             'category_id' => $request->category_id,
             'price' => $request->price,
-            'description' => $request->description
+            'description' => $request->description,
+            'qty' => $request->qty
         ];
         //Jika user upload foto
         if ($request->hasFile('photo')) {
@@ -79,7 +80,8 @@ class ProductController extends Controller
             'name' => $request->name,
             'category_id' => $request->category_id,
             'price' => $request->price,
-            'description' => $request->description
+            'description' => $request->description,
+            'qty' => $request->qty
         ];
 
         if($request->hasFile('photo'))

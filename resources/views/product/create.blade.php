@@ -28,6 +28,10 @@
                             <input type="number" name="price" id="price" class="form-control">
                         </div>
                         <div class="mb-3">
+                            <label for="" class="form-label fw-bold">Stock</label>
+                            <input type="number" name="qty" id="qty" class="form-control">
+                        </div>
+                        <div class="mb-3">
                             <label for="" class="form-label fw-bold">Photo (1:1)</label>
                             <input type="file" name="photo" id="photo" class="form-control">
                         </div>

@@ -23,6 +23,10 @@
                                 <label for="" class="form-label fw-bold">Price</label>
                                 <input type="text" name="price" id="" class="form-control" value="Rp.{{ number_format($products->price) }}" readonly>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="" class="form-label fw-bold">Stock</label>
+                                <input type="text" name="qty" id="" class="form-control" value="{{ $products->qty }}" readonly>
+                            </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-lg-12">

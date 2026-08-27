@@ -11,6 +11,7 @@
                 <th class="text-center">Category Name</th>
                 <th class="text-center">Name</th>
                 <th class="text-center">Price</th>
+                <th class="text-center">Stock</th>
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                     </div>
                 </td>
                 <td class="text-center fw-semibold">Rp.{{ number_format($v->price) }}</td>
+                <td class="text-center fw-semibold {{ $v->qty == 0 ? 'text-danger' : '' }}">{{ $v->qty }}</td>
                 <td class="text-center">
                     <a href="{{ route('product.edit', $v->id) }}" class="btn btn-success">Edit</a>
                     <a href="{{ route('product.show', $v->id) }}" class="btn btn-primary">Detail</a>

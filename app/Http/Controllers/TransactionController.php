@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -36,24 +38,28 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'items' => 'required||array',
-            'items.*.id' => 'required|exists.products,id',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:products,id',
             'items.*.qty' => 'required|integer|min:1',
             'payment_method' => 'nullable|string',
         ]);
 
-        try{
-            return DB::transaction(function () use ($request){
+        try {
+            return DB::transaction(function () use ($request) {
                 $subTotal = 0;
                 $itemsData = [];
 
-                foreach ($request as $items => $item) {
+                foreach ($request->items as $item) {
                     $product = Product::find($item['id']);
+
+                    if ($product->qty < $item['qty']) {
+                        throw new Exception("Stok produk '{$product->name}' tidak mencukupi.");
+                    }
 
                     $itemSubTotal = $product->price * $item['qty'];
                     $subTotal += $itemSubTotal;
 
-                    $itemData[] = [
+                    $itemsData[] = [
                         'product' => $product,
                         'qty' => $item['qty'],
                         'price' => $product->price,
@@ -61,13 +67,41 @@ class TransactionController extends Controller
                     ];
                 }
 
-                $tax = $subtotal * 0.1;
-                $total = $subtotal + $tax;
-                $order_code = 'ORD-'.date('Void') . '-' . rand(1000, 9999);
+                $tax = $subTotal * 0.1;
+                $total = $subTotal + $tax;
+                $order_code = 'ORD-' . date('Ymd') . '-' . rand(1000, 9999);
                 $paymentMethod = $request->payment_method ?? 'cash';
-            });
-        } catch (\Throwable $th) {
 
+                $order = Transaction::create([
+                    'order_code' => $order_code,
+                    'order_amount' => $total,
+                    'order_change' => 0,
+                    'status' => $paymentMethod === 'cash' ? 'success' : 'pending'
+                ]);
+
+                foreach ($itemsData as $data) {
+                    TransactionDetail::create([
+                        'order_id' => $order->id,
+                        'product_id' => $data['product']->id,
+                        'order_qty'   => $data['qty'],
+                        'order_price' => $data['price'],
+                        'order_subtotal' => $data['subtotal']
+                    ]);
+
+                    if ($paymentMethod === 'cash') {
+                        $data['product']->decrement('qty', $data['qty']);
+                    }
+                }
+                return response()->json([
+                    'success' => true,
+                    'payment_method' => $paymentMethod,
+                    'order_id' => $order->id
+                ]);
+            });
+        } catch (Exception $th) {
+            return response()->json([
+                'message' => 'GAGAL MENYIMPAN TRANSAKSI!!! ' . $th->getMessage()
+            ], 400);
         }
     }
 
