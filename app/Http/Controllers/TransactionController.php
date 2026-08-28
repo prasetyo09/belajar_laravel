@@ -43,7 +43,7 @@ class TransactionController extends Controller
             'items' => 'required|array',
             'items.*.id' => 'required|exists:products,id',
             'items.*.qty' => 'required|integer|min:1',
-            'payment_method' => 'nullable|string',
+            'payment_method' => 'nullable|string'
         ]);
 
         try {
@@ -107,7 +107,9 @@ class TransactionController extends Controller
                             "gross_amount" => (int) round($total)
                         ],
                         "customer_details" => [
-                            "first_name" => $$request->customen_name ?? 'No-Name'
+                            "first_name" => $request->customer_name ?? 'No-Name',
+                            "email" => $request->customer_email ?? 'No-Email',
+                            "address" => $request->customer_address ?? 'No-Address'
                         ],
                         // 'enabled_payments' => ['gopay', 'qris']
                     ];
