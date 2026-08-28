@@ -12,4 +12,9 @@ class Transaction extends Model
         'order_change',
         'order_status'
     ];
+
+    public function items()
+    {
+        return $this->hasMany(TransactionDetail::class, 'order_id');
+    }
 }

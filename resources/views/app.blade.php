@@ -198,6 +198,14 @@
             <li>
                 <a href="{{ url('setting') }}" class="d-flex gap-2 {{ request()->is('setting') ? 'active' : '' }}"><i class="bi bi-gear"></i>Settings</a>
             </li>
+
+            <li><a href="#" onclick="event.preventDefault();document.getElementById('logout').submit()">
+                Log out
+            </a></li>
+
+            <form action="{{ route('logout') }}" id="logout" method="post" class="d-none">
+                @csrf
+            </form>
         </ul>
     </aside>
     <!-- Main Area -->

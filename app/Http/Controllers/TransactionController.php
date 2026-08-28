@@ -77,7 +77,7 @@ class TransactionController extends Controller
                 $order = Transaction::create([
                     'order_code' => $order_code,
                     'order_amount' => $total,
-                    'order_change' => 0,
+                    'order_change' => $request->order_change,
                     'status' => $paymentMethod === 'cash' ? 'success' : 'pending'
                 ]);
 
@@ -100,6 +100,18 @@ class TransactionController extends Controller
                     Config::$isProduction = config('services.midtrans.is_production');
                     Config::$isSanitized  = true;
                     Config::$is3ds        = true;
+
+                    foreach ($itemsData as $data) {
+                        TransactionDetail::create([
+                            'order_id' => $order->id,
+                            'product_id' => $data['product']->id,
+                            'order_qty'   => $data['qty'],
+                            'order_price' => $data['price'],
+                            'order_subtotal' => $data['subtotal']
+                        ]);
+
+                        $data['product']->decrement('qty', $data['qty']);
+                    }
 
                     $params = [
                         "transaction_details" => [

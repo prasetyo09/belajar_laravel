@@ -264,7 +264,7 @@
                         </div>
                     </div>
 
-                    <div class="row only-cash d-flex align-items-center mt-3 mb-3">
+                    <div class="row only-cash d-none align-items-center mt-3 mb-3">
                         <div class="col-lg-6">
                             <label for="cash_paid" class="form-label">Pembayaran Cash :</label>
                             <input type="number" id="cash_paid" step="any" min="0" class="form-control" oninput="calculateChange()">
@@ -302,6 +302,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" onclick="processPayment()" class="btn btn-primary">Pay Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Preview Struk -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Struk Pembayaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="location.reload()"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe id="receiptFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="location.reload()">Selesai</button>
                 </div>
             </div>
         </div>
@@ -348,15 +366,22 @@
             if (changeMoney < 0) {
                 changeElement.innerText = `Kurang Rp. ${formatRupiah(Math.abs(changeMoney))}`;
                 changeElement.classList.add('text-bg-danger');
-                changeElement.classList.remove('text-bg-success'); 
+                changeElement.classList.remove('bg-primary');
             } else {
                 changeElement.innerText = `Kembalian Rp. ${formatRupiah(changeMoney)}`;
-                changeElement.classList.add('text-success'); 
-                changeElement.classList.remove('text-danger');
+                changeElement.classList.add('text-bg-success');
+                changeElement.classList.remove('text-bg-danger');
             }
+
+            return {changeMoney};
         }
 
         function openModalPayment(){
+            if (cart.length === 0) {
+                alert('Cart is Empty')
+                return;
+            }
+
             const modal = new bootstrap.Modal(document.getElementById('paymentMethod'));
             modal.show();
         }
@@ -537,6 +562,21 @@
             })
         }
 
+        function openReceipt(transactionId) {
+            if (!transactionId || transactionId === 'undefined') {
+                alert("Gagal memuat struk: ID Transaksi tidak dikirim oleh server!");
+                console.error("Periksa response JSON dari Controller store Anda, pastikan 'transaction_id' ada.");
+                return;
+            }
+            const printUrl = `{{ url('receipt/print') }}/${transactionId}`;
+            document.getElementById('receiptFrame').src = printUrl;
+
+            // Tampilkan modal struk
+            const receiptModalEl = document.getElementById('receiptModal');
+            const receiptModal = new bootstrap.Modal(receiptModalEl);
+            receiptModal.show();
+        }
+
         async function processPayment() {
             if (cart.length === 0) {
                 alert('Cart is Empty')
@@ -548,6 +588,32 @@
             const customerName = document.getElementById('customer_name').value || 'Unknown';
             const customerEmail= document.getElementById('customer_email').value || 'Unknown';
             const customerAddress= document.getElementById('customer_address').value || 'Unknown';
+
+            if (!selectedPayment) {
+                alert('PILIH METODE PEMBAYARAN!!!');
+                return;
+            }
+
+            const {changeMoney} = calculateChange();
+            const cashPayInput = document.getElementById('cash_paid');
+            const change = 0;
+
+            if (paymentMethod === 'cash') {
+                const cashPaidValue = parseFloat(cashPayInput?.value) || 0;
+
+                if (!cashPaidValue) {
+                    alert("Input pembayaran terlebih dahulu!");
+                    cashPayInput.focus();
+                    return;
+                }
+
+                if (cashPaidValue < total) {
+                    alert("Total bayar kurang!!!");
+                    cashPayInput.focus();
+                    return;
+                }
+            }
+
 
             try {
                 const response = await fetch("{{ route('transaction.store') }}", {
@@ -566,6 +632,7 @@
                             }
                         }),
                         payment_method: paymentMethod,
+                        order_change: changeMoney,
                         customer_name: customerName,
                         customer_email: customerEmail,
                         customer_address: customerAddress
@@ -583,10 +650,12 @@
                         onSuccess: function (result) {
                             /* You may add your own implementation here */
 
+                            openReceipt(result.transaction_id);
+
                             alert("payment success!");
                             cart = [];
                             displayCart();
-                            location.reload();
+                            // location.reload();
 
                             // console.log(result)
                         },
@@ -594,14 +663,12 @@
                             /* You may add your own implementation here */
 
                             alert("waiting your payment!");
-                            location.reload();
                             // console.log(result);
                         },
                         onError: function (result) {
                             /* You may add your own implementation here */
 
                             alert("payment failed!");
-                            location.reload();
 
                             // console.log(result);
                         },
@@ -613,9 +680,16 @@
                     });
                 } else {
                     alert("Transaksi Cash Berhasil");
+                    openReceipt(result.order_id);
+
+                    const paymentModalEl = document.getElementById('paymentMethod');
+                    const paymentModal = bootstrap.Modal.getInstance(paymentModalEl);
+                    if (paymentModal) paymentModal.hide();
+
+
                     cart = [];
                     displayCart();
-                    location.reload();
+                    // location.reload();
                 }
             } catch (error) {
                 console.log(error)
