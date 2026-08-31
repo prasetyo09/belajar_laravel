@@ -14,6 +14,16 @@ class DashboardController extends Controller
         $title = 'Dashboard Page';
         return view('dashboard.index', compact('title')) ;
     }
+    public function indexAdmin()
+    {
+        $title = 'Dashboard Page';
+        return view('dashboard.index', compact('title')) ;
+    }
+    public function indexCashier()
+    {
+        $title = 'Dashboard Page';
+        return view('dashboard.index', compact('title')) ;
+    }
 
     /**
      * Show the form for creating a new resource.

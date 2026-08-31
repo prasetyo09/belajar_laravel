@@ -57,3 +57,15 @@ Route::middleware('auth')->group(function(){
 });
 
 //Role
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/dashboard', [DashboardController::class, 'indexAdmin'])->name('indexAdmin');
+});
+
+Route::middleware(['auth', 'kasir'])->group(function () {
+    Route::get('cashier/dashboard', [DashboardController::class, 'indexCashier'])->name('indexCashier');
+    Route::resource('transaction', TransactionController::class);
+});
+
+Route::middleware(['auth', 'pimpinan'])->group(function () {
+    Route::resource('dashboard', DashboardController::class);
+});

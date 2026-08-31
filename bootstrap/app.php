@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\Administrator;
+use App\Http\Middleware\Leader;
+use App\Http\Middleware\Cashier;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,4 +21,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+    })
+    ->withMiddleware(function (Middleware $middleware): void{
+        $middleware->alias([
+            'admin' => Administrator::class,
+        ]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void{
+        $middleware->alias([
+            'kasir' => Cashier::class,
+        ]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void{
+        $middleware->alias([
+            'pimpinan' => Leader::class,
+        ]);
     })->create();

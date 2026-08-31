@@ -31,8 +31,8 @@
 </head>
 <body>
     <div class="text-center">
-        <strong>POS - Kopi Kenangan</strong><br>
-        Jl. Sudirman No. 10<br>
+        <strong>{{ $settings->pos_title }}</strong><br>
+        Jl. Karet Pasar Baru Barat V No. 23, Jakarta Pusat<br>
         Telp: 0812-0000-0000
     </div>
 
@@ -44,7 +44,7 @@
             <td class="text-right">{{ $transaction->created_at->format('d/m/Y H:i') }}</td>
         </tr>
         <tr>
-            <td colspan="2">Status: {{ strtoupper($transaction->order_status) }}</td>
+            <td colspan="2">Status: {{ strtoupper($transaction->order_status) == 1 ? 'Berhasil' : 'Tidak Berhasil'   }}</td>
         </tr>
     </table>
 
@@ -55,18 +55,18 @@
         @if($transaction->items && $transaction->items->count() > 0)
             @foreach($transaction->items as $item)
             <tr>
-                <td colspan="3">{{ $item->product_name ?? $item->name }}</td>
+                <td colspan="3">{{ $item->product->name ?? $item->name }}</td>
             </tr>
             <tr>
-                <td style="width: 35%;">{{ $item->qty }} x {{ number_format($item->price, 0, ',', '.') }}</td>
+                <td style="width: 35%;">{{ $item->order_qty }} x {{ number_format($item->product->price, 2, ',', '.') }}</td>
                 <td></td>
-                <td class="text-right" style="width: 40%;">{{ number_format($item->subtotal ?? ($item->qty * $item->price), 0, ',', '.') }}</td>
+                <td class="text-right" style="width: 40%;">{{ number_format($item->order_subtotal ?? ($item->order_qty * $item->product->price), 0, ',', '.') }}</td>
             </tr>
             @endforeach
         @else
             <tr>
                 <td colspan="2">Total Belanja</td>
-                <td class="text-right">Rp {{ number_format($transaction->order_amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($transaction->order_amount, 2, ',', '.') }}</td>
             </tr>
         @endif
     </table>
@@ -76,11 +76,11 @@
     <table>
         <tr>
             <td><strong>TOTAL TAGIHAN</strong></td>
-            <td class="text-right"><strong>Rp {{ number_format($transaction->order_amount, 0, ',', '.') }}</strong></td>
+            <td class="text-right"><strong>Rp {{ number_format($transaction->order_amount, 2, ',', '.') }}</strong></td>
         </tr>
         <tr>
             <td>Kembali</td>
-            <td class="text-right">Rp {{ number_format($transaction->order_change, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($transaction->order_change, 2, ',', '.') }}</td>
         </tr>
     </table>
 

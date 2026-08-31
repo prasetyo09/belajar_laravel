@@ -52,7 +52,7 @@ class TransactionController extends Controller
                 $itemsData = [];
 
                 foreach ($request->items as $item) {
-                    $product = Product::find($item['id']);
+                    $product = Product::findOrFail($item['id']);
 
                     if ($product->qty < $item['qty']) {
                         throw new Exception("Stok produk '{$product->name}' tidak mencukupi.");
@@ -101,17 +101,17 @@ class TransactionController extends Controller
                     Config::$isSanitized  = true;
                     Config::$is3ds        = true;
 
-                    foreach ($itemsData as $data) {
-                        TransactionDetail::create([
-                            'order_id' => $order->id,
-                            'product_id' => $data['product']->id,
-                            'order_qty'   => $data['qty'],
-                            'order_price' => $data['price'],
-                            'order_subtotal' => $data['subtotal']
-                        ]);
+                    // foreach ($itemsData as $data) {
+                    //     TransactionDetail::create([
+                    //         'order_id' => $order->id,
+                    //         'product_id' => $data['product']->id,
+                    //         'order_qty'   => $data['qty'],
+                    //         'order_price' => $data['price'],
+                    //         'order_subtotal' => $data['subtotal']
+                    //     ]);
 
-                        $data['product']->decrement('qty', $data['qty']);
-                    }
+                    //     $data['product']->decrement('qty', $data['qty']);
+                    // }
 
                     $params = [
                         "transaction_details" => [

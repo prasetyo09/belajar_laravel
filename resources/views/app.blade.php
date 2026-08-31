@@ -171,34 +171,37 @@
     <aside class="sidebar">
         <div class="sidebar-brand text-center">{{ $settings->hero }}</div>
         <ul class="sidebar-menu">
-            <li>
-                <a href="{{ url('dashboard') }}" class="d-flex gap-2 {{ request()->is('dashboard') ? 'active' : '' }}"><i class="bi bi-bag"></i>Dashboard</a>
-            </li>
+            @if (Auth::user()->role_id == 3)
+                <li>
+                    <a href="{{ url('dashboard') }}" class="d-flex gap-2 {{ request()->is('dashboard') ? 'active' : '' }}"><i class="bi bi-bag"></i>Dashboard</a>
+                </li>
+            @elseif (Auth::user()->role_id == 2)
+                <li>
+                    <a href="{{ url('cashier/dashboard') }}" class="d-flex gap-2 {{ request()->is('dashboard') ? 'active' : '' }}"><i class="bi bi-bag"></i>Dashboard</a>
+                </li>
+                <li>
+                    <a href="{{ url('transaction') }}" class="d-flex gap-2 {{ request()->is('transaction') ? 'active' : '' }}"><i class="bi bi-cash"></i>Order Transaction</a>
+                </li>
+            @else
+                <li>
+                    <a href="{{ url('admin/dashboard') }}" class="d-flex gap-2 {{ request()->is('dashboard') ? 'active' : '' }}"><i class="bi bi-bag"></i>Dashboard</a>
+                </li>
+                <li>
+                    <a href="{{ url('role') }}" class="d-flex gap-2 {{ request()->is('role') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Role</a>
+                </li>
 
-            <li>
-                <a href="{{ url('menu') }}" class="d-flex gap-2 {{ request()->is('menu') ? 'active' : '' }}"><i class="bi bi-bag"></i>Menu</a>
-            </li>
+                <li>
+                    <a href="{{ url('category') }}" class="d-flex gap-2 {{ request()->is('category') ? 'active' : '' }}"><i class="bi bi-tag"></i>Category</a>
+                </li>
 
-            <li>
-                <a href="{{ url('role') }}" class="d-flex gap-2 {{ request()->is('role') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Role</a>
-            </li>
-
-            <li>
-                <a href="{{ url('category') }}" class="d-flex gap-2 {{ request()->is('category') ? 'active' : '' }}"><i class="bi bi-tag"></i>Category</a>
-            </li>
-
-            <li>
-                <a href="{{ url('product') }}" class="d-flex gap-2 {{ request()->is('product') ? 'active' : '' }}"><i class="bi bi-handbag-fill"></i>Product</a>
-            </li>
-
-            <li>
-                <a href="{{ url('transaction') }}" class="d-flex gap-2 {{ request()->is('transaction') ? 'active' : '' }}"><i class="bi bi-cash"></i>Order Transaction</a>
-            </li>
-
-            <li>
-                <a href="{{ url('setting') }}" class="d-flex gap-2 {{ request()->is('setting') ? 'active' : '' }}"><i class="bi bi-gear"></i>Settings</a>
-            </li>
-
+                <li>
+                    <a href="{{ url('product') }}" class="d-flex gap-2 {{ request()->is('product') ? 'active' : '' }}"><i class="bi bi-handbag-fill"></i>Product</a>
+                </li>
+                <li>
+                    <a href="{{ url('setting') }}" class="d-flex gap-2 {{ request()->is('setting') ? 'active' : '' }}"><i class="bi bi-gear"></i>Settings</a>
+                </li>
+            @endif
+            
             <li><a href="#" onclick="event.preventDefault();document.getElementById('logout').submit()">
                 Log out
             </a></li>

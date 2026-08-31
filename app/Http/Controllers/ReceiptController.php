@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
 {
-    public function printReceipt($id){
+    public function printReceipt(string $id){
         $transaction = Transaction::with('items')->findOrFail($id);
 
         // 2. Hitung jumlah item dengan aman

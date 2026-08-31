@@ -647,10 +647,10 @@
                 if (result.payment_method === "midtrans") {
                     //MIDTRANS
                     window.snap.pay(result.snap_token, {
-                        onSuccess: function (result) {
+                        onSuccess: function (snapResult) {
                             /* You may add your own implementation here */
 
-                            openReceipt(result.transaction_id);
+                            openReceipt(result.order_id);
 
                             alert("payment success!");
                             cart = [];
@@ -659,13 +659,13 @@
 
                             // console.log(result)
                         },
-                        onPending: function (result) {
+                        onPending: function (snapResult) {
                             /* You may add your own implementation here */
 
                             alert("waiting your payment!");
                             // console.log(result);
                         },
-                        onError: function (result) {
+                        onError: function (snapResult) {
                             /* You may add your own implementation here */
 
                             alert("payment failed!");
