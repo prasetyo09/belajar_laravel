@@ -14,11 +14,11 @@ class LoginController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'email' => 'email|required',
-                'password' => 'min:8|required'
+                'password' => 'min:8|required',
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['message' => 'Validator Error', 'error' => $validator->errors(), 422]);
+                return response()->json(['message' => 'Validator Error', 'error' => $validator->errors()], 422);
             }
 
             $credentials = $request->only('email', 'password');

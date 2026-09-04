@@ -18,15 +18,15 @@ class UserController extends Controller
             $users = User::get();
             return response()->json([
                 'status' => true,
-                'message' => 'Fetch Data Success',
-                'data' => $users,
+                'message' => 'Fetch Data Success!',
+                'data' => $users
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => 'Internal Server Error',
+                'message' => 'Internal Server Error!',
                 'error' => $th->getMessage()
-            ]);
+            ], 422);
         }
     }
 
@@ -47,17 +47,17 @@ class UserController extends Controller
             $validation = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:8',
+                'password' => 'required|min:8'
             ]);
 
             if ($validation->fails()) {
-                return response()->json(['message' => 'Validator Error', 'error' => $validation->errors(), 422]);
+                return response()->json(['message' => 'Validator Error', 'errors' => $validation->errors()], 422);
             }
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => $request->password
             ]);
 
             return response()->json([
@@ -71,7 +71,7 @@ class UserController extends Controller
                 'status' => false,
                 'message' => 'Internal Server Error',
                 'error' => $th->getMessage()
-            ], 500);
+            ], 400);
         }
     }
 
@@ -117,7 +117,7 @@ class UserController extends Controller
             ]);
 
             if ($validation->fails()) {
-                return response()->json(['message' => 'Validator Error', 'error' => $validation->errors(), 422]);
+                return response()->json(['message' => 'Validator Error', 'error' => $validation->errors()], 422);
             }
 
             $user = User::find($id);
